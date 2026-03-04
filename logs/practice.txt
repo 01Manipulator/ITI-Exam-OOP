@@ -1,0 +1,3 @@
+Question { Type -> TrueFalseQuestion Head -> Q1, Body -> Is C# a statically typed programming language? }
+Question { Type -> ChooseOneQuestion Head -> Q2, Body -> What is the time complexity of accessing an element in an array by index? }
+Question { Type -> ChooseAllQuestion Head -> Q3, Body -> Which of the following data structures follow FIFO or LIFO principles? }
