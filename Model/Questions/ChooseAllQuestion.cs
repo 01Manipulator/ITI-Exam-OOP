@@ -7,8 +7,7 @@ namespace ITI_Exam.Model.Questions
 {
     internal class ChooseAllQuestion : Question
     {
-        public AnswerList CorrectAnswers;
-        public ChooseAllQuestion(string header, string body, int marks, AnswerList answers,AnswerList correctAnswers) : base(header, body, marks)
+        public ChooseAllQuestion(string header, string body, int marks, AnswerList answers, AnswerList correctAnswers) : base(header, body, marks)
         {
             if (correctAnswers is null) throw new ArgumentNullException("Correct answer can not be null.");
             if (answers is null) throw new ArgumentNullException("Answers can not be null.");
@@ -17,6 +16,7 @@ namespace ITI_Exam.Model.Questions
         }
         public override bool CheckAnswer(Answer sa)
         {
+            if (CorrectAnswers.Count == 0) throw new InvalidOperationException("No correct answers assigned to this question.");
             if (sa == null) return false;
             string[] parts = sa.Text.Split(',');
             if (parts.Length != CorrectAnswers.Count) return false;
@@ -40,9 +40,34 @@ namespace ITI_Exam.Model.Questions
 
         public override Answer ReadAnswerFromUser()
         {
-            Console.Write("Answer (e.g. 1,2): ");
-            string input = Console.ReadLine();
-            return new Answer(0, input);
+            Answer result = null;
+            while (result == null)
+            {
+                Console.Write("Answer IDs (e.g. 1, 2): ");
+                string input = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input)) continue;
+
+                string[] parts = input.Split(',');
+                bool allValid = true;
+                foreach (var part in parts)
+                {
+                    if (!int.TryParse(part.Trim(), out int id) || Answers?.GetById(id) == null)
+                    {
+                        allValid = false;
+                        break;
+                    }
+                }
+
+                if (allValid)
+                {
+                    result = new Answer(0, input);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Input. Ensure all IDs are valid and comma-separated.");
+                }
+            }
+            return result;
         }
     }
 }

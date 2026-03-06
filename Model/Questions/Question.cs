@@ -13,7 +13,7 @@ namespace ITI_Exam.Model.Questions
         public string Body { get; set; }
         public int Marks { get; set; }
         public AnswerList Answers { get; set; } = new AnswerList();
-        public Answer CorrectAnswer { get; set; }
+        public AnswerList CorrectAnswers { get; set; } = new AnswerList();
 
         protected Question(string header, string body, int marks)
         {

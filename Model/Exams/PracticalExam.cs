@@ -28,9 +28,7 @@ namespace ITI_Exam.Model.Exams
             foreach (var q in Questions)
             {
                 QuestionAnswerDictionary.TryGetValue(q, out Answer sa);
-                string correct = q is ChooseAllQuestion caq
-                    ? caq.CorrectAnswers.ToString()
-                    : q.CorrectAnswer?.ToString();
+                string correct = q.CorrectAnswers.ToString();
                 Console.WriteLine($"\nQ: {q.Body}");
                 Console.WriteLine($"  Submitted Answer: {sa}");
                 Console.WriteLine($"  Right Answer    : {correct}");

@@ -7,17 +7,18 @@ namespace ITI_Exam.Model.Questions
 {
     internal class ChooseOneQuestion : Question
     {
-        public ChooseOneQuestion(string header, string body, int marks,AnswerList answers,Answer correctAnswer) : base(header, body, marks)
+        public ChooseOneQuestion(string header, string body, int marks, AnswerList answers, Answer correctAnswer) : base(header, body, marks)
         {
             if (correctAnswer is null) throw new ArgumentNullException("Correct answer can not be null.");
             if (answers is null) throw new ArgumentNullException("Answers can not be null.");
-            CorrectAnswer = correctAnswer;
+            CorrectAnswers.Add(correctAnswer);
             Answers = answers;
         }
 
         public override bool CheckAnswer(Answer studentAnswer)
         {
-            return CorrectAnswer.Equals(studentAnswer);
+            if (CorrectAnswers.Count == 0) throw new InvalidOperationException("No correct answers assigned to this question.");
+            return CorrectAnswers[0].Equals(studentAnswer);
         }
 
         public override void Display()
@@ -30,10 +31,20 @@ namespace ITI_Exam.Model.Questions
 
         public override Answer ReadAnswerFromUser()
         {
-            Console.Write("Answer: ");
-            if (int.TryParse(Console.ReadLine(), out int id))
-                return Answers?.GetById(id);
-            return null;
+            Answer selected = null;
+            while (selected == null)
+            {
+                Console.Write("Answer (ID): ");
+                if (int.TryParse(Console.ReadLine(), out int id))
+                {
+                    selected = Answers?.GetById(id);
+                }
+                if (selected == null)
+                {
+                    Console.WriteLine("Invalid ID. Please choose one of the listed IDs.");
+                }
+            }
+            return selected;
         }
     }
 }
